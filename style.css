@@ -1,0 +1,16 @@
+#container {
+    position: relative;
+    outline: 2px solid black;
+    padding: 0;
+    margin: auto;
+    height: 960px;
+    width: 960px;
+    border: none;
+}
+.box {
+    border: none;
+    outline: 1px solid black;
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}

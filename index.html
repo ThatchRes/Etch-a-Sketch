@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Etch-a-Sketch</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div class="slideContainer">
+            <p id="sliderValue">16 x 16 </p>
+            <input type="range" min="1" max="64" class="slide" id="squareSize">
+        </div>
+        <div id="container">
+        </div>
+    </body>
+    <script>
+        let currentSize;
+        let container = 
+        document.querySelector("#container");
+        let squareSize = document.querySelector("#squareSize");
+        const slideContainer = document.querySelector("#slideContainer");
+        let valueSlide = document.querySelector("#sliderValue")
+
+        squareSize.oninput = (e) => changeSize(e.target.value)
+
+        function updateSizeValue(value) {
+            valueSlide.innerHTML = `${value} x ${value}`;
+        }
+        function setCurrentSize(value) {
+            currentSize = value * value;
+        }
+        function newGrid() {
+            clear()
+            createGrid(currentSize)
+        }
+        function changeSize(value) {
+            setCurrentSize(value)
+            updateSizeValue(value)
+            newGrid();
+        }
+        function createDiv() {
+            let div = document.createElement('div');
+            div.classList.add("box")
+            return div;
+
+        }
+        function createGrid(currentSize) {
+            for (let rows = 0; rows < currentSize; rows++) {
+                for(let columns = 0; columns < currentSize; columns++) {
+                    container.appendChild(createDiv())
+                }
+            }
+            $(".box").width(960/x)
+            $(".box").width(960/x)
+        }
+        function clear() {
+            container.value = "";
+        }
+        
+
+
+
+    </script>
+</html>
