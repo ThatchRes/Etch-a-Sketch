@@ -4,60 +4,153 @@
         <meta charset="UTF-8">
         <title>Etch-a-Sketch</title>
         <link rel="stylesheet" href="style.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     </head>
     <body>
         <div class="slideContainer">
+            <h1>Etch-A-Sketch</h1>
+            <button class="colorBtn" id="original">basic</button>
+            <button class="colorBtn" id="darken">medium</button>
+            <button class="colorBtn" id="rainbow">random</button>
+            <button class='reg' id="clear">Clear</button>
             <p id="sliderValue">16 x 16 </p>
-            <input type="range" min="1" max="64" class="slide" id="squareSize">
+            <input type="range"value="16" min="1" max="64" class="slide" id="squareSize">
         </div>
         <div id="container">
         </div>
     </body>
     <script>
+        let cell = [];
+        let colorMode = 'basic';
         let currentSize;
+        const colorButtons = 
+        document.querySelectorAll(".colorBtn")
+        let rainbow = 
+        document.querySelector('#rainbow')
+        let basicColor =
+        document.querySelector("#original")
+        let shadedFill = 
+        document.querySelector('#darken')
+        let clearBtn = 
+        document.querySelector("#clear");
         let container = 
         document.querySelector("#container");
         let squareSize = document.querySelector("#squareSize");
         const slideContainer = document.querySelector("#slideContainer");
         let valueSlide = document.querySelector("#sliderValue")
-
-        squareSize.oninput = (e) => changeSize(e.target.value)
+        currentSize = squareSize.value * squareSize.value;
+        squareSize.addEventListener('input', (e) => {
+            changeSize(e.target.value)
+        });
 
         function updateSizeValue(value) {
             valueSlide.innerHTML = `${value} x ${value}`;
         }
-        function setCurrentSize(value) {
-            currentSize = value * value;
+        function setCurrentSize() {
+            currentSize = squareSize.value * squareSize.value;
+            return currentSize;
         }
         function newGrid() {
             clear()
-            createGrid(currentSize)
+            createGrid(currentSize);
         }
         function changeSize(value) {
             setCurrentSize(value)
             updateSizeValue(value)
             newGrid();
+            paintColor(colorMode);
         }
-        function createDiv() {
-            let div = document.createElement('div');
-            div.classList.add("box")
-            return div;
 
-        }
-        function createGrid(currentSize) {
-            for (let rows = 0; rows < currentSize; rows++) {
-                for(let columns = 0; columns < currentSize; columns++) {
-                    container.appendChild(createDiv())
+            function createGrid() {
+                container.style.gridTemplateColumns = (`repeat(${squareSize.value}, 1fr`);
+                container.style.gridTemplateRows = (`repeat(${squareSize.value}, 1fr`)
+                let totalSquares = currentSize;
+                console.log(totalSquares);
+                for(let i = 0; i < totalSquares; i++) {
+                    cell[i] = document.createElement('div');
+                    cell[i].classList.add("box")
+                    container.appendChild(cell[i]);
+
                 }
             }
-            $(".box").width(960/x)
-            $(".box").width(960/x)
+            function getMode() {
+                colorButtons[0].classList.add('active');
+
+                colorButtons.forEach((selection) => {
+                    selection.addEventListener('click', () => {
+                    console.log(selection)
+                    if(selection.id == 'original') {
+                        paintColor('basic')
+                        selectButton(selection)
+                        colorMode = 'basic'
+                    } else if (selection.id == 'darken') {
+                        paintColor('darken')
+                        selectButton(selection)
+                        colorMode = 'darken'
+                    } else if (selection.id == 'rainbow') {
+                        paintColor('random')
+                        selectButton(selection)
+                        colorMode = 'random';
+                    }
+                }) 
+            })
         }
         function clear() {
-            container.value = "";
+            while(container.firstChild) {
+                container.removeChild(container.firstChild)
+            }
         }
-        
+        function paintColor(colorMode) {
+            const allItems = document.querySelectorAll('.box')
 
+            allItems.forEach((item) => {
+                const allItems = item;
+                allItems.count = 0;
+                allItems.addEventListener('mouseenter', (e) => {
+                    console.log(colorMode)
+                    if (colorMode == 'basic') {
+                        e.target.classList.add('basic-style')
+                        e.target.style.opacity = 1;
+                        console.log(e.target)
+                    } else if (colorMode == 'darken') {
+                        e.target.style.backgroundColor = 'black'
+                        e.target.count += 1;
+                        e.target.style.opacity = 0.2 * e.target.count;
+                    } else if (colorMode == 'random') {
+                        console.log('log')
+                        const random = ['blue', 'red', 'coral', 'green', 'purple'];
+                        const rndmPick = Math.floor(Math.random() * random.length);
+                        e.target.style.opacity = 1;
+                        e.target.style.backgroundColor = random[rndmPick];
+                    }
+                })
+            })
+        }
+        clearBtn.addEventListener('click', (e) => {
+            erase()
+        });
+        function selectButton(button) {
+                colorButtons.forEach((selection) => {
+                    selection.classList.remove('active')
+                });
+            button.classList.add('active')
+        }
+        function erase() {
+            const allItems = document.querySelectorAll('.box')
+
+            allItems.forEach((item) => {
+                const allItems = item;
+                allItems.style.backgroundColor = 'white'
+            })
+        }
+        function startGame() {
+            createGrid();
+            paintColor('basic');
+            changeSize(16);
+            getMode()
+
+        }
+        startGame();
 
 
     </script>
